@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🛒 Ekart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #f2f2f2;
+    }
+
+    header {
+      background-color: #232f3e;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    .search-bar {
+      padding: 10px 20px;
+      text-align: center;
+      background: #fff;
+    }
+
+    .search-bar input {
+      width: 80%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+
+    .product-details {
+      padding: 10px;
+    }
+
+    .product-name {
+      font-weight: bold;
+      margin: 10px 0 5px;
+      font-size: 16px;
+    }
+
+    .product-desc {
+      font-size: 14px;
+      color: #555;
+      height: 40px;
+      overflow: hidden;
+    }
+
+    .product-price {
+      color: green;
+      font-size: 18px;
+      margin-top: 10px;
+    }
+
+    .view-btn {
+      margin-top: 10px;
+      padding: 8px;
+      background-color: #f0c14b;
+      border: 1px solid #a88734;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .view-btn:hover {
+      background-color: #e2b33c;
+    }
+
+    .cart-section {
+      background: #fff;
+      padding: 20px;
+      margin: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 6px rgba(0,0,0,0.1);
+    }
+
+    .cart-title {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #ddd;
+      padding: 8px 0;
+    }
+
+    .cart-summary {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .checkout-btn {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #ff9900;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .checkout-btn:hover {
+      background-color: #e68a00;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  🛒 <strong>Ekart</strong>
+</header>
+
+<div class="search-bar">
+  <input type="text" id="searchInput" onkeyup="filterProducts()" placeholder="Search for products...">
+</div>
+
+<div class="product-grid" id="productGrid"></div>
+
+<div class="cart-section" id="cartSection" style="display: none;">
+  <div class="cart-title">🛒 Cart</div>
+  <div id="cartItems"></div>
+  <div class="cart-summary" id="cartSummary"></div>
+  <button class="checkout-btn" onclick="checkout()">Checkout</button>
+</div>
+
+<script>
+  const products = [
+    { name: "Wireless Headphones", desc: "Noise-cancelling Bluetooth headphones.", price: "₹4000", img: "https://via.placeholder.com/100" },
+    { name: "Smart Watch", desc: "Tracks fitness, heart rate, and notifications.", price: "₹8999", img: "https://via.placeholder.com/100" },
+    { name: "USB-C Cable", desc: "Fast-charging USB-C cable for Android devices.", price: "₹999", img: "https://via.placeholder.com/100" },
+    { name: "Laptop Backpack", desc: "Waterproof backpack fits 15.6\" laptops.", price: "₹2999", img: "https://via.placeholder.com/100" },
+    { name: "Wireless Mouse", desc: "Ergonomic mouse with 3 DPI settings.", price: "₹1499", img: "https://via.placeholder.com/100" },
+    { name: "Bluetooth Speaker", desc: "12-hour playtime with deep bass.", price: "₹3999", img: "https://via.placeholder.com/100" },
+    { name: "LED Desk Lamp", desc: "Adjustable brightness and color temperature.", price: "₹2499", img: "https://via.placeholder.com/100" },
+    { name: "Phone Stand", desc: "Foldable mobile stand for desk use.", price: "₹699", img: "https://via.placeholder.com/100" },
+    { name: "Webcam 1080p", desc: "Full HD webcam with mic for meetings.", price: "₹3499", img: "https://via.placeholder.com/100" },
+    { name: "Portable SSD", desc: "500GB high-speed USB 3.1 SSD.", price: "₹7999", img: "https://via.placeholder.com/100" },
+    { name: "Wireless Charger", desc: "Fast wireless charger for smartphones.", price: "₹1999", img: "https://via.placeholder.com/100" },
+    { name: "Gaming Keyboard", desc: "RGB mechanical keyboard with blue switches.", price: "₹2999", img: "https://via.placeholder.com/100" },
+    { name: "Gaming Mouse", desc: "Programmable mouse with 7 buttons.", price: "₹2599", img: "https://via.placeholder.com/100" },
+    { name: "HDMI Cable", desc: "6ft high-speed HDMI cable for 4K.", price: "₹799", img: "https://via.placeholder.com/100" },
+    { name: "Power Bank", desc: "10,000mAh charger with dual output.", price: "₹2299", img: "https://via.placeholder.com/100" },
+    { name: "Noise Cancelling Earbuds", desc: "Wireless earbuds with charging case.", price: "₹5999", img: "https://via.placeholder.com/100" },
+    { name: "Tablet Stand", desc: "Adjustable aluminum tablet stand.", price: "₹1043", img: "https://via.placeholder.com/100" },
+    { name: "Desk Organizer", desc: "Wooden desk organizer for accessories.", price: "₹1542", img: "https://via.placeholder.com/100" },
+    { name: "Ring Light", desc: "LED ring light with tripod and mount.", price: "₹2300", img: "https://via.placeholder.com/100" },
+    { name: "Keyboard Cover", desc: "Silicone cover for MacBook Pro.", price: "₹2300", img: "https://via.placeholder.com/100" }
+  ];
+
+  const cart = [];
+  const container = document.getElementById("productGrid");
+  const cartSection = document.getElementById("cartSection");
+  const cartItems = document.getElementById("cartItems");
+  const cartSummary = document.getElementById("cartSummary");
+
+  function displayProducts(list) {
+    container.innerHTML = "";
+    list.forEach((product, index) => {
+      const card = document.createElement("div");
+      card.className = "product-card";
+      card.innerHTML = `
+        <img src="${product.img}" alt="${product.name}">
+        <div class="product-details">
+          <div class="product-name">${product.name}</div>
+          <div class="product-desc">${product.desc}</div>
+          <div class="product-price">${product.price}</div>
+          <button class="view-btn" onclick="addToCart(${index})">Add to Cart</button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  function filterProducts() {
+    const searchValue = document.getElementById("searchInput").value.toLowerCase();
+    const filtered = products.filter(p => p.name.toLowerCase().includes(searchValue));
+    displayProducts(filtered);
+  }
+
+  function addToCart(index) {
+    cart.push(products[index]);
+    updateCartUI();
+  }
+  function updateCartUI() {
+  cartItems.innerHTML = "";
+  let total = 0;
+
+  cart.forEach((item, index) => {
+    const itemEl = document.createElement("div");
+    itemEl.className = "cart-item";
+    itemEl.innerHTML = `
+      <span>${item.name}</span>
+      <span>${item.price}</span>
+      <button onclick="removeFromCart(${index})" style="margin-left: 10px; background-color: red; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">Remove</button>
+    `;
+    cartItems.appendChild(itemEl);
+    total += parseFloat(item.price.replace("₹", "").replace(",", ""));
+  });
+
+  cartSummary.innerText = `Total Items: ${cart.length} | Total Price: ₹${total.toFixed(2)}`;
+  cartSection.style.display = cart.length > 0 ? "block" : "none";
+}
+  function removeFromCart(index) {
+  cart.splice(index, 1); // Remove the item at the given index
+  updateCartUI();        // Refresh the cart display and totals
+}
+
+
+
+  function checkout() {
+    if (cart.length === 0) {
+      alert("Your cart is empty!");
+      return;
+    }
+
+    localStorage.setItem("cartItems", JSON.stringify(cart));
+    window.location.href = "checkout.html";
+  }
+
+  // Load all products initially
+  displayProducts(products);
+</script>
+
+</body>
+</html>
