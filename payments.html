@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment - Emart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f2f2f2;
+        }
+
+        header {
+            background-color: #232f3e;
+            color: white;
+            padding: 15px 20px;
+            font-size: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .payment-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .order-summary {
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 25px;
+        }
+
+        .order-summary p {
+            margin: 5px 0;
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .order-summary .total-amount {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #b12704; /* Amazon's orange/red for price */
+            text-align: right;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px dashed #ddd;
+        }
+
+        .payment-methods {
+            margin-bottom: 30px;
+        }
+
+        .payment-option {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .payment-option:hover {
+            border-color: #f0c14b;
+            box-shadow: 0 0 5px rgba(240, 193, 75, 0.5);
+        }
+
+        .payment-option.selected {
+            border-color: #f0c14b;
+            box-shadow: 0 0 8px rgba(240, 193, 75, 0.7);
+            background-color: #fffaf0; /* Light yellow background */
+        }
+
+        .payment-option label {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .payment-option input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .card-details, .upi-details {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px dashed #eee;
+            display: none; /* Hidden by default */
+        }
+
+        .card-details label, .upi-details label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: normal;
+            color: #555;
+        }
+
+        .card-details input, .upi-details input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .card-details .row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .card-details .row > div {
+            flex: 1;
+        }
+
+        .card-details .row input {
+            width: calc(100% - 20px); /* Adjust for padding */
+        }
+
+        .pay-button {
+            width: 100%;
+            padding: 15px;
+            background-color: #f0c14b;
+            color: #111;
+            border: 1px solid #a88734;
+            border-radius: 6px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .pay-button:hover {
+            background-color: #e2b33c;
+        }
+
+        .back-to-home {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .back-to-home:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Secure Payment</h1>
+    </header>
+
+    <div class="payment-container">
+        <h2>Order Summary</h2>
+        <div class="order-summary">
+            <p>Subtotal: <span id="subtotalAmount">₹0.00</span></p>
+            <p>Shipping: ₹0.00</p>
+            <div class="total-amount">Grand Total: <span id="grandTotalAmount">₹0.00</span></div>
+        </div>
+
+        <h2>Select a payment method</h2>
+        <div class="payment-methods">
+            <div class="payment-option" onclick="selectPaymentMethod('card')">
+                <label>
+                    <input type="radio" name="paymentMethod" value="card" checked>
+                    Credit/Debit Card
+                </label>
+                <div class="card-details" id="cardDetails">
+                    <label for="cardNumber">Card Number:</label>
+                    <input type="text" id="cardNumber" placeholder="XXXX XXXX XXXX XXXX" maxlength="19">
+
+                    <div class="row">
+                        <div>
+                            <label for="expiryDate">Expiry Date:</label>
+                            <input type="text" id="expiryDate" placeholder="MM/YY" maxlength="5">
+                        </div>
+                        <div>
+                            <label for="cvv">CVV:</label>
+                            <input type="text" id="cvv" placeholder="XXX" maxlength="4">
+                        </div>
+                    </div>
+                    <label for="cardName">Name on Card:</label>
+                    <input type="text" id="cardName" placeholder="Full Name">
+                </div>
+            </div>
+
+            <div class="payment-option" onclick="selectPaymentMethod('upi')">
+                <label>
+                    <input type="radio" name="paymentMethod" value="upi">
+                    UPI
+                </label>
+                <div class="upi-details" id="upiDetails">
+                    <label for="upiId">Enter UPI ID:</label>
+                    <input type="text" id="upiId" placeholder="yourname@bankupi">
+                </div>
+            </div>
+
+            <div class="payment-option" onclick="selectPaymentMethod('netbanking')">
+                <label>
+                    <input type="radio" name="paymentMethod" value="netbanking">
+                    Net Banking
+                </label>
+                </div>
+
+            <div class="payment-option" onclick="selectPaymentMethod('cod')">
+                <label>
+                    <input type="radio" name="paymentMethod" value="cod">
+                    Cash on Delivery (COD)
+                </label>
+            </div>
+        </div>
+
+        <button class="pay-button" onclick="processPayment()">Pay <span id="payButtonAmount">₹0.00</span></button>
+
+        <a href="dashboard.html" class="back-to-home">← Continue Shopping</a>
+    </div>
+
+    <script>
+        const subtotalAmountSpan = document.getElementById('subtotalAmount');
+        const grandTotalAmountSpan = document.getElementById('grandTotalAmount');
+        const payButtonAmountSpan = document.getElementById('payButtonAmount');
+
+        const currentOrderTotal = parseFloat(localStorage.getItem('currentOrderTotal')) || 0;
+
+        subtotalAmountSpan.textContent = `₹${currentOrderTotal.toFixed(2)}`;
+        grandTotalAmountSpan.textContent = `₹${currentOrderTotal.toFixed(2)}`;
+        payButtonAmountSpan.textContent = `₹${currentOrderTotal.toFixed(2)}`;
+
+        // Function to handle payment method selection and show/hide details
+        function selectPaymentMethod(method) {
+            const radio = document.querySelector(`input[value="${method}"]`);
+            if (radio) {
+                radio.checked = true;
+            }
+
+            const allOptions = document.querySelectorAll('.payment-option');
+            allOptions.forEach(option => option.classList.remove('selected'));
+            document.querySelector(`.payment-option input[value="${method}"]`).closest('.payment-option').classList.add('selected');
+
+            // Hide all detail sections first
+            document.getElementById('cardDetails').style.display = 'none';
+            document.getElementById('upiDetails').style.display = 'none';
+
+            // Show relevant detail section
+            if (method === 'card') {
+                document.getElementById('cardDetails').style.display = 'block';
+            } else if (method === 'upi') {
+                document.getElementById('upiDetails').style.display = 'block';
+            }
+        }
+
+        // Initial selection (default to card)
+        selectPaymentMethod('card');
+
+        function processPayment() {
+            const selectedMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            let paymentDetails = {};
+
+            if (selectedMethod === 'card') {
+                paymentDetails = {
+                    cardNumber: document.getElementById('cardNumber').value,
+                    expiryDate: document.getElementById('expiryDate').value,
+                    cvv: document.getElementById('cvv').value,
+                    cardName: document.getElementById('cardName').value
+                };
+                // Basic validation (you'd need more robust validation for real payments)
+                if (!paymentDetails.cardNumber || !paymentDetails.expiryDate || !paymentDetails.cvv || !paymentDetails.cardName) {
+                    alert('Please fill in all card details.');
+                    return;
+                }
+            } else if (selectedMethod === 'upi') {
+                paymentDetails = {
+                    upiId: document.getElementById('upiId').value
+                };
+                if (!paymentDetails.upiId) {
+                    alert('Please enter your UPI ID.');
+                    return;
+                }
+            } else if (selectedMethod === 'cod') {
+                paymentDetails = { method: 'Cash on Delivery' };
+            } else if (selectedMethod === 'netbanking') {
+                 paymentDetails = { method: 'Net Banking' };
+            }
+
+            // In a real application, you would send paymentDetails and currentOrderTotal
+            // to a backend server for processing with a payment gateway (e.g., Stripe, Razorpay, PayU).
+            // For this frontend-only simulation, we'll just show an alert.
+
+            alert(`Processing payment of ₹${currentOrderTotal.toFixed(2)} via ${selectedMethod.toUpperCase()}...`);
+
+            // Simulate a successful payment and then redirect to orders page
+            setTimeout(() => {
+                alert("✅ Payment successful! Your order has been confirmed.");
+                // We've already saved the cart to 'yourOrders' in checkout.html
+                // Now, remove the currentOrderTotal as it's processed
+                localStorage.removeItem('currentOrderTotal');
+                window.location.href = 'yourorders.html';
+            }, 1500); // Simulate network delay
+        }
+    </script>
+
+</body>
+</html>

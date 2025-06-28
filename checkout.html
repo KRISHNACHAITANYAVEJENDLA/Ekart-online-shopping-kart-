@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout - Emart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+
+    h1 {
+      text-align: center;
+      color: #232f3e;
+    }
+
+    .checkout-container {
+      max-width: 800px;
+      background: white;
+      margin: 30px auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #ddd;
+      padding: 15px 0;
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .cart-item img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 5px;
+      margin-right: 15px;
+    }
+
+    .item-info {
+      flex-grow: 1;
+    }
+
+    .item-name {
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .item-price {
+      color: green;
+      font-weight: bold;
+    }
+
+    .total-section {
+      text-align: right;
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .buttons {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 0 10px;
+      transition: 0.3s ease;
+    }
+
+    .btn.place {
+      background-color: #f0c14b;
+      color: #111;
+      border: 1px solid #a88734;
+    }
+
+    .btn.place:hover {
+      background-color: #e2b33c;
+    }
+
+    .btn.back {
+      background-color: #ddd;
+      color: #333;
+    }
+
+    .btn.back:hover {
+      background-color: #ccc;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Checkout</h1>
+
+  <div class="checkout-container" id="checkoutContainer">
+    </div>
+
+  <div class="buttons">
+    <button class="btn place" onclick="placeOrder()">Proceed to Payment</button>
+    <a href="index.html" class="btn back">← Back to Home</a>
+  </div>
+
+  <script>
+    const cart = JSON.parse(localStorage.getItem("cartItems")) || [];
+    const container = document.getElementById("checkoutContainer");
+    let calculatedTotal = 0; // Declare a global variable to store the total
+
+    if (cart.length === 0) {
+      container.innerHTML = "<p>Your cart is empty.</p>";
+      document.querySelector('.buttons').style.display = "none";
+    } else {
+      cart.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "cart-item";
+        div.innerHTML = `
+          <img src="${item.img}" alt="${item.name}">
+          <div class="item-info">
+            <div class="item-name">${item.name}</div>
+            <div class="item-desc">${item.desc}</div>
+          </div>
+          <div class="item-price">${item.price}</div>
+        `;
+        container.appendChild(div);
+        calculatedTotal += parseFloat(item.price.replace("₹", "").replace(",", ""));
+      });
+
+      const totalDiv = document.createElement("div");
+      totalDiv.className = "total-section";
+      totalDiv.textContent = `Total: ₹${calculatedTotal.toFixed(2)}`;
+      container.appendChild(totalDiv);
+    }
+
+    function placeOrder() {
+      if (cart.length === 0) {
+        alert("Your cart is empty. Nothing to order.");
+        return;
+      }
+
+      // Save the current cart items to "yourOrders" for display later
+      let existingOrders = JSON.parse(localStorage.getItem("yourOrders")) || [];
+      existingOrders = existingOrders.concat(cart);
+      localStorage.setItem("yourOrders", JSON.stringify(existingOrders));
+
+      // Save the total amount for the payments page
+      localStorage.setItem("currentOrderTotal", calculatedTotal.toFixed(2));
+
+      // Clear the cart for the next shopping session (after moving to payments)
+      localStorage.removeItem("cartItems");
+
+      // Redirect to the payments page
+      window.location.href = "payments.html";
+    }
+  </script>
+
+</body>
+</html>
