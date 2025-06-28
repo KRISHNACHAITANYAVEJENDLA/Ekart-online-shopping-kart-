@@ -96,13 +96,6 @@
       overflow: hidden;
     }
 
-    /* NEW STYLE FOR PRODUCT SIZE */
-    .product-size {
-      font-size: 13px;
-      color: #777;
-      margin-bottom: 5px;
-    }
-
     .product-price {
       color: green;
       font-size: 18px;
@@ -189,28 +182,27 @@
 </div>
 
 <script>
-  // 1. Modify the products array to include 'size'
   const products = [
-    { name: "Wireless Headphones", desc: "Noise-cancelling Bluetooth headphones.", price: "₹4000", img: "wireless headphones.jpeg", size: "One Size" },
-    { name: "Smart Watch", desc: "Tracks fitness, heart rate, and notifications.", price: "₹8999", img: "smart watch.webp", size: "100mm" },
-    { name: "USB-C Cable", desc: "Fast-charging USB-C cable for Android devices.", price: "₹999", img: "usbc.jpeg", size: "2 Meter" },
-    { name: "Laptop Backpack", desc: "Waterproof backpack fits 15.6\" laptops.", price: "₹2999", img: "LaptopBackpack.webp", size: "Large" },
-    { name: "Wireless Mouse", desc: "Ergonomic mouse with 3 DPI settings.", price: "₹1499", img: "wirelessmouse.jpeg", size: "Medium" },
-    { name: "Bluetooth Speaker", desc: "12-hour playtime with deep bass.", price: "₹3999", img: "bluetoothspeaker.jpeg", size: "Compact" },
-    { name: "LED Desk Lamp", desc: "Adjustable brightness and color temperature.", price: "₹2499", img: "desklamp.jpeg", size: "Standard" },
-    { name: "Phone Stand", desc: "Foldable mobile stand for desk use.", price: "₹699", img: "phonestand.jpeg", size: "Universal" },
-    { name: "Webcam 1080p", desc: "Full HD webcam with mic for meetings.", price: "₹3499", img: "webcam.jpeg", size: "Standard" },
-    { name: "Portable SSD", desc: "500GB high-speed USB 3.1 SSD.", price: "₹7999", img: "portablessd.jpeg", size: "500GB" },
-    { name: "Wireless Charger", desc: "Fast wireless charger for smartphones.", price: "₹1999", img: "wirelesscharger.jpeg", size: "Standard" },
-    { name: "Gaming Keyboard", desc: "RGB mechanical keyboard with blue switches.", price: "₹2999", img: "gamingkeyboard.jpeg", size: "Full-size" },
-    { name: "Gaming Mouse", desc: "Programmable mouse with 7 buttons.", price: "₹2599", img: "gamingmouse.jpeg", size: "Ergonomic" },
-    { name: "HDMI Cable", desc: "6ft high-speed HDMI cable for 4K.", price: "₹799", img: "hdmicable.jpeg", size: "6ft" },
-    { name: "Power Bank", desc: "10,000mAh charger with dual output.", price: "₹2299", img: "powerbank.jpeg", size: "10000mAh" },
-    { name: "Noise Cancelling Earbuds", desc: "Wireless earbuds with charging case.", price: "₹5999", img: "noisecancellingearbuds.jpeg", size: "In-Ear" },
-    { name: "Tablet Stand", desc: "Adjustable aluminum tablet stand.", price: "₹1043", img: "tabletstand.jpeg", size: "Universal" },
-    { name: "Desk Organizer", desc: "Wooden desk organizer for accessories.", price: "₹1542", img: "deskorganizer.jpeg", size: "Compact" },
-    { name: "Ring Light", desc: "LED ring light with tripod and mount.", price: "₹2300", img: "ringlight.jpeg", size: "10-inch" },
-    { name: "Keyboard Cover", desc: "Silicone cover for MacBook Pro.", price: "₹2300", img: "keyboardcover.jpeg", size: "13-inch" }
+    { name: "Wireless Headphones", desc: "Noise-cancelling Bluetooth headphones.", price: "₹4000", img: "wireless headphones.jpeg" },
+    { name: "Smart Watch", desc: "Tracks fitness, heart rate, and notifications.", price: "₹8999", img: "smart watch.webp" },
+    { name: "USB-C Cable", desc: "Fast-charging USB-C cable for Android devices.", price: "₹999", img: "usbc.jpeg" },
+    { name: "Laptop Backpack", desc: "Waterproof backpack fits 15.6\" laptops.", price: "₹2999", img: "LaptopBackpack.webp" },
+    { name: "Wireless Mouse", desc: "Ergonomic mouse with 3 DPI settings.", price: "₹1499", img: "wirelessmouse.jpeg" },
+    { name: "Bluetooth Speaker", desc: "12-hour playtime with deep bass.", price: "₹3999", img: "bluetoothspeaker.jpeg" },
+    { name: "LED Desk Lamp", desc: "Adjustable brightness and color temperature.", price: "₹2499", img: "desklamp.jpeg" },
+    { name: "Phone Stand", desc: "Foldable mobile stand for desk use.", price: "₹699", img: "phonestand.jpeg" },
+    { name: "Webcam 1080p", desc: "Full HD webcam with mic for meetings.", price: "₹3499", img: "webcam.jpeg" },
+    { name: "Portable SSD", desc: "500GB high-speed USB 3.1 SSD.", price: "₹7999", img: "portablessd.jpeg" },
+    { name: "Wireless Charger", desc: "Fast wireless charger for smartphones.", price: "₹1999", img: "wirelesscharger.jpeg" },
+    { name: "Gaming Keyboard", desc: "RGB mechanical keyboard with blue switches.", price: "₹2999", img: "gamingkeyboard.jpeg" },
+    { name: "Gaming Mouse", desc: "Programmable mouse with 7 buttons.", price: "₹2599", img: "gamingmouse.jpeg" },
+    { name: "HDMI Cable", desc: "6ft high-speed HDMI cable for 4K.", price: "₹799", img: "hdmicable.jpeg" },
+    { name: "Power Bank", desc: "10,000mAh charger with dual output.", price: "₹2299", img: "powerbank.jpeg" },
+    { name: "Noise Cancelling Earbuds", desc: "Wireless earbuds with charging case.", price: "₹5999", img: "noisecancellingearbuds.jpeg" },
+    { name: "Tablet Stand", desc: "Adjustable aluminum tablet stand.", price: "₹1043", img: "tabletstand.jpeg" },
+    { name: "Desk Organizer", desc: "Wooden desk organizer for accessories.", price: "₹1542", img: "deskorganizer.jpeg" },
+    { name: "Ring Light", desc: "LED ring light with tripod and mount.", price: "₹2300", img: "ringlight.jpeg" },
+    { name: "Keyboard Cover", desc: "Silicone cover for MacBook Pro.", price: "₹2300", img: "keyboardcover.jpeg" }
   ];
 
   const cart = [];
@@ -229,7 +221,6 @@
         <div class="product-details">
           <div class="product-name">${product.name}</div>
           <div class="product-desc">${product.desc}</div>
-          <div class="product-size">Size: ${product.size}</div>
           <div class="product-price">${product.price}</div>
           <button class="view-btn" onclick="addToCart(${index})">Add to Cart</button>
         </div>
@@ -240,16 +231,12 @@
 
   function filterProducts() {
     const searchValue = document.getElementById("searchInput").value.toLowerCase();
-    // Update filter logic to also search by size if desired
-    const filtered = products.filter(p => 
-      p.name.toLowerCase().includes(searchValue) ||
-      (p.size && p.size.toLowerCase().includes(searchValue)) // Optional: search by size
-    );
+    const filtered = products.filter(p => p.name.toLowerCase().includes(searchValue));
     displayProducts(filtered);
   }
 
   function addToCart(index) {
-    cart.push(products[index]); // The 'products[index]' already contains the size
+    cart.push(products[index]);
     updateCartUI();
   }
 
@@ -261,7 +248,8 @@
       const itemEl = document.createElement("div");
       itemEl.className = "cart-item";
       itemEl.innerHTML = `
-        <span>${item.name} ${item.size ? `(Size: ${item.size})` : ''}</span> <span>${item.price}</span>
+        <span>${item.name}</span>
+        <span>${item.price}</span>
         <button onclick="removeFromCart(${index})" style="margin-left: 10px; background-color: red; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">Remove</button>
       `;
       cartItems.appendChild(itemEl);
